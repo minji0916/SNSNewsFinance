@@ -1,0 +1,29 @@
+# Ignore large data files
+data/doc-summarize-AIHUB/Training/*.zip
+data/doc-summarize-AIHUB/Validation/*.zip
+
+# Ignore CSV files (uncomment if you want to ignore all CSV files)
+# *.csv
+
+# Ignore Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+
+# Ignore system files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Ignore environment files
+.env
+
+# Ignore log files
+*.log
+
+# Ignore other common files
+*.bak
+*.swp
+*.tmp

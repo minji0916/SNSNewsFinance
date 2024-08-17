@@ -9,3 +9,22 @@
 # AI task 정리
 1. 자연어 처리 모듈 개발 (뉴스 요약)
 2. 머신러닝 모델 훈련 및 적용 (뉴스 및 금융 정보 추천 시스템)
+
+## 파일 구조
+
+- `data/`: 원본 및 요약된 뉴스 데이터 CSV 파일
+- `src/`: 소스 코드 디렉터리
+  - `config.py`: API 키와 설정
+  - `fetch_news.py`: 뉴스 데이터를 API를 통해 가져오고, 데이터를 CSV로 저장하는 스크립트
+  - `scrape_content.py`: 뉴스 콘텐츠를 스크래핑하는 스크립트
+  - `summarize.py`: 뉴스 요약을 처리하는 스크립트 (현재 사용되지 않음)
+  - `main.py`: 전체 파이프라인 실행 스크립트
+- `notebooks/`: 데이터 분석 및 실험을 위한 Jupyter 노트북
+- `requirements.txt`: 필요한 Python 패키지 목록
+
+## 실행 방법
+
+1. API 키와 설정을 `src/config.py`에 입력합니다.
+2. 터미널에서 `src/main.py`를 실행하여 전체 파이프라인을 수행합니다.
+
+

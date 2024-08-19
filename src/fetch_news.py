@@ -12,7 +12,7 @@ import os
 setup_logging()
 
 # 뉴스 데이터를 저장할 데이터프레임 초기화
-news_df = pd.DataFrame(columns=["Category", "Title", "Original Link", "Description", "Publication Date", "Content"])
+news_df = pd.DataFrame(columns=["Category", "Title", "Original Link", "Description", "Publication Date"])
 
 def fetch_news(query):
     """
@@ -88,9 +88,11 @@ def save_to_csv(filename='data/raw_data.csv'):
         
         # 'Publication Date'를 기준으로 내림차순 정렬합니다.
         combined_df = combined_df.sort_values('Publication Date', ascending=False)
+
+        news_df = combined_df
     
     try:
-        combined_df.to_csv(filename, index=False)
+        news_df.to_csv(filename, index=False)
         logging.info(f"CSV 파일이 '{filename}'로 저장되었습니다.")
     except Exception as e:
         logging.error(f"Failed to save CSV file: {e}")

@@ -67,20 +67,30 @@ def fetch_news(query):
 def save_to_csv(filename='data/raw_data.csv'):
     """
     데이터프레임을 CSV 파일로 저장합니다.
-    파일이 존재하면 기존 데이터에 추가합니다.
+    파일이 존재하면 기존 데이터에 추가하고, 'Original Link'를 기준으로 중복을 제거합니다.
     
     :param filename: 저장할 CSV 파일명
     """
+    global news_df
+    
     if os.path.exists(filename):
-        # 파일이 존재하면 기존 데이터를 읽어온 후, 새로운 데이터를 추가합니다.
+        # 파일이 존재하면 기존 데이터를 읽어옵니다.
         existing_df = pd.read_csv(filename)
-        updated_df = pd.concat([existing_df, news_df], ignore_index=True)
-    else:
-        # 파일이 없으면 새로 생성합니다.
-        updated_df = news_df
-
+        
+        # 기존 데이터와 새로운 데이터를 합칩니다.
+        combined_df = pd.concat([existing_df, news_df], ignore_index=True)
+        
+        # 'Original Link'를 기준으로 중복을 제거합니다. 첫 번째 발생한 값을 유지합니다.
+        combined_df = combined_df.drop_duplicates(subset='Original Link', keep='first')
+        
+        # 정렬을 위해 'Publication Date'를 datetime으로 변환합니다.
+        combined_df['Publication Date'] = pd.to_datetime(combined_df['Publication Date'], errors='coerce')
+        
+        # 'Publication Date'를 기준으로 내림차순 정렬합니다.
+        combined_df = combined_df.sort_values('Publication Date', ascending=False)
+    
     try:
-        updated_df.to_csv(filename, index=False)
+        combined_df.to_csv(filename, index=False)
         logging.info(f"CSV 파일이 '{filename}'로 저장되었습니다.")
     except Exception as e:
         logging.error(f"Failed to save CSV file: {e}")

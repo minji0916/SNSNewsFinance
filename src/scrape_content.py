@@ -35,23 +35,30 @@ def extract_news_content(url):
         return None
     
     max_tag_count = 0
-    best_content = None
+    news_content_div = None
 
-    # div, section, article 각각 별도로 검사
-    for tag_type in ['div', 'section', 'article']:
-        for tag in soup.find_all(tag_type):
-            tag_count = sum(len(tag.find_all(inner_tag)) for inner_tag in tags_to_check)
-            content = tag.get_text(strip=True)
+    for div_limit in range(2, 10):
+        for div in soup.find_all('div'):            
+            num_nested_divs = len(div.find_all('div'))
+            if num_nested_divs >= div_limit:
+                continue
             
-            if tag_count > max_tag_count and len(content) >= 300:
+            tag_count = sum(len(div.find_all(tag)) for tag in tags_to_check)
+            
+            if tag_count > max_tag_count and len(div.get_text(strip=True)) >= 300:
                 max_tag_count = tag_count
-                best_content = content
+                news_content_div = div
+        
+        if news_content_div:
+            content = news_content_div.get_text(strip=True)
+            if len(content) >= 300:
+                return content
+    
+    return None
 
-    return best_content
-
-def scrape_content_from_csv(input_csv='data/raw_data.csv', output_csv='data/raw_data.csv'):
+def scrape_content_from_csv(input_csv='data/raw_data.csv', output_csv='data/soup_scraped_results.csv'):
     """
-    CSV 파일에서 뉴스 콘텐츠를 스크랩하여 'content' 컬럼에 저장합니다.
+    CSV 파일에서 뉴스 콘텐츠를 스크랩하여 'Content' 컬럼에 저장합니다.
     
     :param input_csv: 입력 CSV 파일명
     :param output_csv: 출력 CSV 파일명

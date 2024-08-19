@@ -12,7 +12,7 @@ import os
 setup_logging()
 
 # 뉴스 데이터를 저장할 데이터프레임 초기화
-news_df = pd.DataFrame(columns=["Category", "Title", "Original Link", "Description", "Publication Date"])
+news_df = pd.DataFrame(columns=["Category", "Title", "Original Link", "Description", "Publication Date", "Content"])
 
 def fetch_news(query):
     """

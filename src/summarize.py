@@ -5,6 +5,7 @@ import json
 from database import get_news_without_summary, update_news_summary
 from config import setup_logging
 import logging
+import time
 
 # 로깅 설정
 setup_logging()
@@ -69,5 +70,9 @@ def summarize_news():
 
 if __name__ == "__main__":
     logging.info("뉴스 요약 프로세스 시작")
+    start_time = time.time()
     summarize_news()
+    total_time = time.time() - start_time
     logging.info("뉴스 요약 프로세스 완료")
+    logging.info(f"총 처리 시간: {total_time:.2f} 초")
+    

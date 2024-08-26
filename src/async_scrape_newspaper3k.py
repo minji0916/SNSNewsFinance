@@ -2,12 +2,10 @@ import asyncio
 import aiohttp
 from newspaper import Article
 from fake_useragent import UserAgent
-import pandas as pd
 import psutil
 import time
 import chardet
 from concurrent.futures import ProcessPoolExecutor
-import os
 import logging
 import re
 import ssl
@@ -15,6 +13,8 @@ from config import (
     setup_logging, CONCURRENCY, CHUNK_SIZE, TIMEOUT, 
     MAX_RETRIES, RETRY_DELAY
 )
+from database import get_news_without_content, update_news_content
+from collections import Counter
 
 # 로그 설정
 setup_logging()
@@ -41,19 +41,20 @@ async def fetch(session, url, timeout=TIMEOUT, max_retries=MAX_RETRIES):
                 content = await response.read()
                 encoding = chardet.detect(content)['encoding'] or 'utf-8'
                 return content.decode(encoding, errors='replace')
-        except (asyncio.TimeoutError, aiohttp.ClientError, ssl.SSLError) as e:
-            logging.warning(f"Error for {url}, attempt {attempt + 1}/{max_retries}: {str(e)}")
+        except (asyncio.TimeoutError, aiohttp.ClientError, ssl.SSLError, ConnectionResetError) as e:
+            logging.warning(f"{url}에 대한 오류 발생, 시도 {attempt + 1}/{max_retries}: {str(e)}")
             if isinstance(e, ssl.SSLError) and attempt < max_retries - 1:
                 ssl_context = ssl.create_default_context()
                 ssl_context.check_hostname = False
                 ssl_context.verify_mode = ssl.CERT_NONE
+            if attempt < max_retries - 1:
+                await asyncio.sleep(RETRY_DELAY * (attempt + 1))  # 점진적으로 대기 시간 증가
         except Exception as e:
-            logging.warning(f"Failed to fetch {url}, attempt {attempt + 1}/{max_retries}: {str(e)}")
-        
-        if attempt < max_retries - 1:
-            await asyncio.sleep(RETRY_DELAY)
+            logging.error(f"{url}에 대한 예기치 않은 오류 발생: {str(e)}")
+            if attempt < max_retries - 1:
+                await asyncio.sleep(RETRY_DELAY * (attempt + 1))
     
-    logging.error(f"Failed to fetch {url} after {max_retries} attempts")
+    logging.error(f"{url}를 {max_retries}회 시도했으나 실패했습니다")
     return None
 
 def parse_article(html, url):
@@ -65,12 +66,12 @@ def parse_article(html, url):
             cleaned_text = clean_text(article.text)
             return cleaned_text
         except Exception as e:
-            logging.error(f"Failed to parse {url}: {str(e)}")
+            logging.error(f"{url}을(를) 파싱하는 데 실패했습니다: {str(e)}")
     return None
 
 async def extract_news_content(session, url):
     if not isinstance(url, str) or not url.startswith('http'):
-        logging.warning(f"Invalid URL: {url}")
+        logging.warning(f"잘못된 URL: {url}")
         return None
 
     html = await fetch(session, url)
@@ -100,8 +101,8 @@ async def scrape_urls(urls, chunk_size=CHUNK_SIZE, concurrency=CONCURRENCY):
         results = await process_chunk(chunk, sem)
         all_results.extend(results)
         
-        logging.info(f"Processed {len(all_results)} out of {len(urls)} URLs")
-        logging.info(f"CPU Usage: {psutil.cpu_percent()}%, Memory Usage: {psutil.virtual_memory().percent}%")
+        logging.info(f"{len(urls)}개의 URL 중 {len(all_results)}개 처리 완료")
+        logging.info(f"CPU 사용량: {psutil.cpu_percent()}%, Memory 사용량: {psutil.virtual_memory().percent}%")
         
         if i < len(chunks) - 1:
             await asyncio.sleep(1)
@@ -121,32 +122,61 @@ def clean_text(text):
     
     return text
 
-async def update_content(df):
-    urls_to_scrape = df[df['Content'].isna()]['Original Link'].tolist()
-    logging.info(f"Found {len(urls_to_scrape)} URLs to scrape")
+async def update_content_in_db():
+    urls_to_scrape = get_news_without_content()
+    logging.info(f"스크랩할 URL 찾음 : {len(urls_to_scrape)}")
 
     if urls_to_scrape:
         scraped_contents = await scrape_urls(urls_to_scrape)
         
         for url, content in zip(urls_to_scrape, scraped_contents):
-            df.loc[df['Original Link'] == url, 'Content'] = content
-
-    return df
+            if content:
+                update_news_content(url, content)
 
 async def main():
-    logging.info("Starting web scraping process...")
     start_time = time.time()
+    logging.info("웹 스크래핑 프로세스 시작...")
 
-    df = pd.read_csv("data/raw_data.csv")
-    if 'Content' not in df.columns:
-        df['Content'] = pd.NA
+    urls_to_scrape = get_news_without_content()
+    total_urls = len(urls_to_scrape)
+    logging.info(f"스크랩할 총 URL 수: {total_urls}")
 
-    updated_df = await update_content(df)
-    updated_df.to_csv("data/raw_data_updated.csv", index=False, encoding='utf-8-sig')
+    results = Counter()
+    failed_urls = []
+
+    if urls_to_scrape:
+        scraped_contents = await scrape_urls(urls_to_scrape)
+        
+        for url, content in zip(urls_to_scrape, scraped_contents):
+            if content:
+                update_news_content(url, content)
+                logging.info(f"URL 업데이트 완료: {url}")
+                results['success'] += 1
+            else:
+                logging.warning(f"콘텐츠를 가져오지 못했습니다: {url}")
+                results['fail'] += 1
+                failed_urls.append(url)
 
     total_time = time.time() - start_time
-    logging.info(f"Web scraping process completed. Total time taken: {total_time:.2f} seconds")
-    logging.info(f"Results saved to data/raw_data_updated.csv")
+    success_rate = (results['success'] / total_urls) * 100 if total_urls > 0 else 0
+
+    logging.info("=" * 50)
+    logging.info("웹 스크래핑 프로세스 완료")
+    logging.info(f"총 처리 시간: {total_time:.2f} 초")
+    logging.info(f"총 URL 수: {total_urls}")
+    logging.info(f"성공: {results['success']}")
+    logging.info(f"실패: {results['fail']}")
+    logging.info(f"성공률: {success_rate:.2f}%")
+    logging.info("=" * 50)
+
+    if failed_urls:
+        logging.info("실패한 URL 목록:")
+        for url in failed_urls:
+            logging.info(url)
+        logging.info("=" * 50)
+
+    logging.info(f"CPU 사용률: {psutil.cpu_percent()}%")
+    logging.info(f"메모리 사용률: {psutil.virtual_memory().percent}%")
 
 if __name__ == "__main__":
     asyncio.run(main())

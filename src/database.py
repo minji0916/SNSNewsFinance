@@ -53,3 +53,42 @@ def save_news_to_database(news_data):
             cursor.close()
             connection.close()
             logging.info("MySQL 연결이 닫혔습니다.")
+
+def get_news_without_content():
+    connection = create_connection()
+    if connection is None:
+        return []
+
+    cursor = connection.cursor()
+    query = "SELECT news_url FROM News WHERE content IS NULL OR content = ''"
+
+    try:
+        cursor.execute(query)
+        results = cursor.fetchall()
+        return [result[0] for result in results]
+    except Error as e:
+        logging.error(f"데이터 조회 오류: {e}")
+        return []
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+
+def update_news_content(news_url, content):
+    connection = create_connection()
+    if connection is None:
+        return
+
+    cursor = connection.cursor()
+    query = "UPDATE News SET content = %s WHERE news_url = %s"
+
+    try:
+        cursor.execute(query, (content, news_url))
+        connection.commit()
+        logging.info(f"뉴스 내용 업데이트 완료: {news_url}")
+    except Error as e:
+        logging.error(f"데이터 업데이트 오류: {e}")
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()

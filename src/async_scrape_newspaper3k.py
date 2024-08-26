@@ -153,6 +153,7 @@ async def main():
                 logging.info(f"URL 업데이트 완료: {url}")
                 results['success'] += 1
             else:
+                update_news_content(url, "failed")  # content에 "failed" 표시
                 logging.warning(f"콘텐츠를 가져오지 못했습니다: {url}")
                 results['fail'] += 1
                 failed_urls.append(url)

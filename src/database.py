@@ -92,3 +92,44 @@ def update_news_content(news_url, content):
         if connection.is_connected():
             cursor.close()
             connection.close()
+
+def get_news_without_summary():
+    connection = create_connection()
+    if connection is None:
+        return []
+
+    cursor = connection.cursor(dictionary=True)
+    query = """
+    SELECT news_id, content, description
+    FROM News
+    WHERE (summary IS NULL OR summary = '') AND content IS NOT NULL
+    """
+    try:
+        cursor.execute(query)
+        return cursor.fetchall()
+    except Error as e:
+        logging.error(f"데이터 조회 오류: {e}")
+        return []
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+
+def update_news_summary(news_id, summary):
+    connection = create_connection()
+    if connection is None:
+        return
+
+    cursor = connection.cursor()
+    query = "UPDATE News SET summary = %s WHERE news_id = %s"
+
+    try:
+        cursor.execute(query, (summary, news_id))
+        connection.commit()
+        logging.info(f"뉴스 요약 업데이트 완료: ID {news_id}")
+    except Error as e:
+        logging.error(f"데이터 업데이트 오류: {e}")
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()

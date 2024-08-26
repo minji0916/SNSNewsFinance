@@ -8,7 +8,6 @@ import time
 import chardet
 from concurrent.futures import ProcessPoolExecutor
 import os
-from dotenv import load_dotenv
 import logging
 from config import setup_logging
 import re
@@ -16,9 +15,6 @@ import ssl
 
 # 로그 설정
 setup_logging()
-
-# 환경 변수 로드
-load_dotenv()
 
 # 환경 변수에서 설정 값 로드
 CONCURRENCY = int(os.getenv('CONCURRENCY', 10))

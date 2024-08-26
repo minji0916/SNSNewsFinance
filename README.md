@@ -16,6 +16,7 @@
 - `src/`: 소스 코드 디렉터리
   - `config.py`: API 키와 설정
   - `fetch_news.py`: 뉴스 데이터를 API를 통해 가져오고, 데이터를 CSV로 저장하는 스크립트
+  - `database.py`: 데이터베이스 연결 및 데이터 삽입 로직 
   - `scrape_content.py`: 뉴스 콘텐츠를 스크래핑하는 스크립트
   - `summarize.py`: 뉴스 요약을 처리하는 스크립트 (현재 사용되지 않음)
   - `main.py`: 전체 파이프라인 실행 스크립트

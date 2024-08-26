@@ -9,19 +9,15 @@ import chardet
 from concurrent.futures import ProcessPoolExecutor
 import os
 import logging
-from config import setup_logging
 import re
 import ssl
+from config import (
+    setup_logging, CONCURRENCY, CHUNK_SIZE, TIMEOUT, 
+    MAX_RETRIES, RETRY_DELAY
+)
 
 # 로그 설정
 setup_logging()
-
-# 환경 변수에서 설정 값 로드
-CONCURRENCY = int(os.getenv('CONCURRENCY', 10))
-CHUNK_SIZE = int(os.getenv('CHUNK_SIZE', 30))
-TIMEOUT = int(os.getenv('TIMEOUT', 30))
-MAX_RETRIES = int(os.getenv('MAX_RETRIES', 2))
-RETRY_DELAY = int(os.getenv('RETRY_DELAY', 1))
 
 # User-Agent 랜덤 생성기 설정
 ua = UserAgent()

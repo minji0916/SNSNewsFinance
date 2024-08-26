@@ -1,64 +1,55 @@
-# database.py
 import mysql.connector
 from mysql.connector import Error
+from config import MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE
 import logging
-from config import DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME
 
-def connect_to_database():
-    """
-    MySQL 데이터베이스에 연결을 시도하고, 연결 객체를 반환합니다.
-    연결에 실패하면 None을 반환합니다.
-    """
+def create_connection():
+    connection = None
     try:
         connection = mysql.connector.connect(
-            host=DB_HOST,
-            port=DB_PORT,
-            user=DB_USER,
-            password=DB_PASSWORD,
-            database=DB_NAME
+            host=MYSQL_HOST,
+            user=MYSQL_USER,
+            passwd=MYSQL_PASSWORD,
+            database=MYSQL_DATABASE,
+            charset='utf8mb4',
+            collation='utf8mb4_general_ci'
         )
-        if connection.is_connected():
-            logging.info("MySQL database connection successful")
-            return connection
+        logging.info("MariaDB 데이터베이스 연결 성공")
     except Error as e:
-        logging.error(f"Error while connecting to MySQL: {e}")
-        return None
+        logging.error(f"데이터베이스 연결 오류: {e}")
+    return connection
 
-def save_to_database(news_df):
-    """
-    뉴스 데이터를 MySQL 데이터베이스에 저장합니다.
-
-    :param news_df: 저장할 뉴스 데이터가 포함된 DataFrame
-    """
-    connection = connect_to_database()
+def save_news_to_database(news_data):
+    connection = create_connection()
     if connection is None:
         return
 
     cursor = connection.cursor()
 
-    for _, row in news_df.iterrows():
-        try:
-            # Insert news data into the News table
-            insert_news_query = """
-            INSERT INTO News (category, news_url, title, description, publication_date)
-            VALUES (%s, %s, %s, %s, %s)
-            """
-            cursor.execute(insert_news_query, (
-                row['Category'],
-                row['Original Link'],
-                row['Title'],
-                row['Description'],
-                row['Publication Date']
-            ))
+    # 중복 체크 및 삽입 SQL
+    check_duplicate = "SELECT COUNT(*) FROM News WHERE news_url = %s"
+    insert_news = """
+    INSERT INTO News (category, news_url, title, description, publication_date)
+    VALUES (%s, %s, %s, %s, %s)
+    """
 
-            # Commit the transaction
-            connection.commit()
+    try:
+        for news_item in news_data:
+            # 중복 체크
+            cursor.execute(check_duplicate, (news_item[1],))  # news_url은 두 번째 항목
+            result = cursor.fetchone()
+            if result[0] == 0:  # 중복되지 않은 경우에만 삽입
+                cursor.execute(insert_news, news_item)
+                logging.info(f"새 뉴스 항목이 추가됨: {news_item[2]}")  # 제목 로깅
+            else:
+                logging.info(f"중복된 뉴스 항목 무시됨: {news_item[2]}")  # 제목 로깅
 
-        except Error as e:
-            logging.error(f"Failed to insert data into MySQL table: {e}")
-            connection.rollback()
-
-    # Close the cursor and connection
-    cursor.close()
-    connection.close()
-    logging.info("MySQL connection is closed")
+        connection.commit()
+        logging.info("뉴스 데이터 저장 완료")
+    except Error as e:
+        logging.error(f"데이터 저장 오류: {e}")
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+            logging.info("MySQL 연결이 닫혔습니다.")

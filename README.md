@@ -52,6 +52,7 @@ SNSNE/
 1. 네이버 API의 클라이언트 ID와 시크릿 키와 DB 관련 설정을 `src/.env`에 입력합니다. 
 
 2. Docker를 사용하는 경우, docker-compose.yml 파일을 사용해 MariaDB 사용 
+
 2-1. Docker를 사용하지 않는 경우, DB는 DBeaver를 사용해 MariaDB 사용
 
 3. `create_table.sql/.env` 코드로 테이블 생성

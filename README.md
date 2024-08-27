@@ -21,32 +21,28 @@
 2. 머신러닝 모델 훈련 및 적용 (뉴스 및 금융 정보 추천 시스템)
 
 ## 파일 구조
+```
 SNSNE/
-│
-├── .vscode/                  # VS Code 설정 디렉토리
-│
-├── database/                 # DBeaver 사용 : 데이터베이스 관련 파일 디렉토리
-│
-├── img/                      # git readme에 올릴 이미지
-│
-├── notebooks/                # 데이터 분석 및 실험을 위한 Jupyter 노트북 디렉토리
-│   └── analysis.ipynb        # 분석용 Jupyter 노트북
-│
-├── src/                      # 소스 코드 디렉토리
-│   ├── .env                  # Naver News API(클라이언트 ID, key), DB 관련 설정 등 환경 변수 파일 (gitignore 파일)
-│   ├── async_scrape_ne...    # 뉴스 원문 스크래핑 파일 - 비동기로 속도 향상
-│   ├── config.py             # 설정 파일 (.env 파일에 저장된 환경 변수를 설정)
-│   ├── create_table.sql      # 테이블 생성 (News, UserNewsViews) - 현재, News 테이블만 사용됨
-│   ├── database.py           # 데이터베이스 연결 및 데이터 처리 관련 파일
-│   ├── fetch_news.py         # 뉴스 데이터를 가져오는 스크립트
-│   ├── main.py               # 메인 실행 스크립트
-│   ├── streamlit_stream...   # etc : vLLM 참고 코드 (사용 안함)
-│   └── summarize.py          # 뉴스 요약 처리 스크립트
-│
-├── .gitignore                # Git 무시 파일 목록
-├── docker-compose....        # DB 관련 Docker Compose 설정 파일 (MariaDB 이미지)
-├── requirements.txt          # 프로젝트 실행을 위한 라이브러리 (pip freeze 파일)
-└── news_project.log          # 프로젝트 로그 파일 (gitignore 파일 - main 실행 시, 자동 생성됨)
+├── .vscode/                 # VS Code 설정 디렉토리
+├── database/                # DBeaver 사용 : 데이터베이스 관련 파일 디렉토리
+├── img/                     # git readme에 올릴 이미지
+├── notebooks/               # 데이터 분석 및 실험을 위한 Jupyter 노트북 디렉토리
+│   └── analysis.ipynb       # 분석용 Jupyter 노트북
+├── src/                     # 소스 코드 디렉토리
+│   ├── .env                 # Naver News API(클라이언트 ID, key), DB 관련 설정 등 환경 변수 파일 (gitignore 파일)
+│   ├── async_scrape_ne...   # 뉴스 원문 스크래핑 파일 - 비동기로 속도 향상
+│   ├── config.py            # 설정 파일 (.env 파일에 저장된 환경 변수를 설정)
+│   ├── create_table.sql     # 테이블 생성 (News, UserNewsViews) - 현재, News 테이블만 사용됨
+│   ├── database.py          # 데이터베이스 연결 및 데이터 처리 관련 파일
+│   ├── fetch_news.py        # 뉴스 데이터를 가져오는 스크립트
+│   ├── main.py              # 메인 실행 스크립트
+│   ├── streamlit_stream...  # etc : vLLM 참고 코드 (사용 안함)
+│   └── summarize.py         # 뉴스 요약 처리 스크립트
+├── .gitignore               # Git 무시 파일 목록
+├── docker-compose.yml       # DB 관련 Docker Compose 설정 파일 (MariaDB 이미지)
+├── requirements.txt         # 프로젝트 실행에 필요한 Python 라이브러리 목록이 저장된 파일 (pip freeze)
+└── news_project.log         # 프로젝트 로그 파일 (gitignore 파일 - main 실행 시, 자동 생성됨)
+```
 
 ## DB 엔티티 관계도
 ![alt text](/img/image.png)

@@ -49,6 +49,7 @@ SNSNE/
 
 ## 실행 방법
 1. python=3.10.11 가상환경 생성 후, requirements.txt 파일을 이용해 패키지 설치
+- requirements.txt로 패키지 설치가 안될 경우, `최후의수단.txt`로 라이브러리 직접 설치
 ```
 # 가상환경 생성 및 가상환경 들어가기
 conda create --name myenv python=3.10.11

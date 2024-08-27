@@ -1,6 +1,7 @@
 from fetch_news import fetch_all_news
 import asyncio
 from async_scrape_newspaper3k import main as scrape_main
+from summarize import summarize_news
 
 async def main():
     """
@@ -10,6 +11,9 @@ async def main():
 
     # 뉴스 url에서 본문만 스크랩
     await scrape_main()
+
+    # gemma2 사용해 뉴스 분석
+    summarize_news()
 
 if __name__ == "__main__":
     asyncio.run(main())

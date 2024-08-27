@@ -27,6 +27,3 @@ desktop.ini
 *.bak
 *.swp
 *.tmp
-
-# key, 설정 정보
-config.py

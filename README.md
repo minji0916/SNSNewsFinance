@@ -51,8 +51,9 @@ SNSNE/
 
 2. Docker를 사용하는 경우, docker-compose.yml 파일을 사용해 MariaDB 사용
     - Docker Desktop 실행
-    - 프로젝트 파일에서 docker-compose.yml이 있는 지 확인
-    - docker-compose up -d
+    - 프로젝트 파일에서 docker-compose.yml이 있는지 확인
+       ls
+       docker-compose up -d
 
 2-1. Docker를 사용하지 않는 경우, MariaDB 서버를 로컬 시스템에 설치
     - (참고 : DBeaver를 사용해 MariaDB 연결하면 유지보수 용이)

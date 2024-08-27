@@ -55,7 +55,7 @@ SNSNE/
 
 2-1. Docker를 사용하지 않는 경우, DB는 DBeaver를 사용해 MariaDB 사용
 
-3. `create_table.sql/.env` 코드로 테이블 생성
+3. `src/create_table.sql` 코드를 참고해서 MariaDB에 테이블 생성
 
 4. Ollma에서 gemma2 모델 다운 및 사용 잘 되는지 확인 
     명령어 : ollama run gemma2

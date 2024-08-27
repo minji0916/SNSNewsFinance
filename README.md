@@ -47,20 +47,24 @@ SNSNE/
 ![alt text](/img/image.png)
 
 ## 실행 방법
-0. `requirements.txt` 파일을 이용해 가상환경 생성
+1. `requirements.txt` 파일을 이용해 가상환경 생성
 
-1. 네이버 API의 클라이언트 ID와 시크릿 키와 DB 관련 설정을 `src/.env`에 입력합니다. 
-
-2. Docker를 사용하는 경우, docker-compose.yml 파일을 사용해 MariaDB 사용 
-
-2-1. Docker를 사용하지 않는 경우, DB는 DBeaver를 사용해 MariaDB 사용
+2. Docker를 사용하는 경우, docker-compose.yml 파일을 사용해 MariaDB 사용
+    - Docker Desktop 실행
+    - 프로젝트 파일에서 docker-compose.yml이 있는 지 확인
+    - docker-compose up -d
+2-1. Docker를 사용하지 않는 경우, MariaDB 서버를 로컬 시스템에 설치
+    - (참고 : DBeaver를 사용해 MariaDB 연결하면 유지보수 용이)
 
 3. `src/create_table.sql` 코드를 참고해서 MariaDB에 테이블 생성
 
-4. Ollma에서 gemma2 모델 다운 및 사용 잘 되는지 확인 
+4. 네이버 API의 클라이언트 ID와 시크릿 키와 DB 관련 설정을 `src/.env`에 입력합니다.
+
+5. Ollma에서 gemma2 모델 다운 및 사용 잘 되는지 확인 
     명령어 : ollama run gemma2
 
-5. 터미널에서 `src/main.py`를 실행하여 전체 파이프라인을 수행합니다.
+6. 터미널에서 `src/main.py`를 실행하여 전체 파이프라인을 수행합니다.
 
 
 
+ 

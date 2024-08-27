@@ -83,6 +83,15 @@ pip list
 ```
 7. 터미널에서 `src/main.py`를 실행하여 전체 파이프라인을 수행합니다.
 
-
+## 테스트 방법
+실행하는데 오래 걸릴 수 있으므로, `src/.env` 파일에서 해당 부분을 아래 설정으로 변경해줍니다.
+```
+# Naver news API 호출 시 설정
+SEARCH_QUERIES=["주식"]  # 검색할 키워드를 좁힘
+DISPLAY_COUNT=5         # 한 페이지에 5개의 뉴스만 반환
+START_INDEX=1           # 첫 번째 뉴스부터 시작
+END_INDEX=5             # 첫 5개의 뉴스만 반환
+SORT_ORDER='date'       # 최신 뉴스 기준으로 정렬
+```
 
  

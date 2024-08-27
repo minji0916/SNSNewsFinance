@@ -1,0 +1,14 @@
+# 가상환경 들어가서 한 줄씩 입력하며 설치
+pip install python-dotenv
+pip install mysql-connector-python
+pip install aiohttp
+pip install newspaper3k
+pip install lxml_html_clean
+pip install fake-useragent
+pip install psutil
+pip install chardet
+pip install langchain-community
+
+# 패키지 의존성 파일 작성 및 설치
+pip freeze > requirements.txt
+pip install -r requirements.txt

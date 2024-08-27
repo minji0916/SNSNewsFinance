@@ -19,6 +19,52 @@ def create_connection():
         logging.error(f"데이터베이스 연결 오류: {e}")
     return connection
 
+def create_tables():
+    connection = create_connection()
+    if connection is None:
+        return
+
+    cursor = connection.cursor()
+
+    # News 테이블 생성
+    create_news_table = """
+    CREATE TABLE IF NOT EXISTS News (
+        news_id INT AUTO_INCREMENT PRIMARY KEY,
+        category TEXT,
+        news_url VARCHAR(255),
+        title VARCHAR(255),
+        description TEXT,
+        content TEXT,
+        summary TEXT,
+        publication_date VARCHAR(255),
+        embedding TEXT
+    )
+    """
+
+    # UserNewsViews 테이블 생성
+    create_user_news_views_table = """
+    CREATE TABLE IF NOT EXISTS UserNewsViews (
+        view_id INT AUTO_INCREMENT PRIMARY KEY,
+        user_id INT,
+        news_id INT,
+        view_date VARCHAR(255),
+        FOREIGN KEY (news_id) REFERENCES News(news_id)
+    )
+    """
+
+    try:
+        cursor.execute(create_news_table)
+        cursor.execute(create_user_news_views_table)
+        connection.commit()
+        logging.info("News테이블과 UserNewsViews테이블이 생성되었습니다 (이미 존재할 경우 제외).")
+    except Error as e:
+        logging.error(f"테이블 생성 오류: {e}")
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+            logging.info("MySQL 연결이 닫혔습니다.")
+
 def save_news_to_database(news_data):
     connection = create_connection()
     if connection is None:

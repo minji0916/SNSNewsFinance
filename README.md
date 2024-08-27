@@ -38,6 +38,7 @@ SNSNE/
 │   ├── streamlit_stream...  # etc : vLLM 참고 코드 (사용 안함)
 │   └── summarize.py         # 뉴스 요약 처리 스크립트
 ├── .gitignore               # Git 무시 파일 목록
+├── 최후의수단.txt           # requirements.txt로 가상환경을 만들어도 안될 경우, 라이브러리 직접 설치
 ├── docker-compose.yml       # DB 관련 Docker Compose 설정 파일 (MariaDB 이미지)
 ├── requirements.txt         # 프로젝트 실행에 필요한 Python 라이브러리 목록이 저장된 파일 (pip freeze)
 └── news_project.log         # 프로젝트 로그 파일 (gitignore 파일 - main 실행 시, 자동 생성됨)
@@ -47,7 +48,18 @@ SNSNE/
 ![alt text](/img/image.png)
 
 ## 실행 방법
-1. `requirements.txt` 파일을 이용해 가상환경 생성
+1. python=3.10.11 가상환경 생성 후, requirements.txt 파일을 이용해 패키지 설치
+```
+# 가상환경 생성 및 가상환경 들어가기
+conda create --name myenv python=3.10.11
+conda activate myenv
+
+# 패키지 의존성 파일 설치
+pip install -r requirements.txt
+
+# 설치 확인
+pip list
+```
 
 2. Docker를 사용하는 경우, docker-compose.yml 파일을 사용해 MariaDB 사용
     - Docker Desktop 실행

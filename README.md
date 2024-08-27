@@ -51,9 +51,11 @@ SNSNE/
 
 2. Docker를 사용하는 경우, docker-compose.yml 파일을 사용해 MariaDB 사용
     - Docker Desktop 실행
-    - 프로젝트 파일에서 docker-compose.yml이 있는지 확인
+    - 프로젝트 파일에서 docker-compose.yml이 있는지 확인 후, 컨테이너 생성
+   ```
        ls
        docker-compose up -d
+   ```
 
 2-1. Docker를 사용하지 않는 경우, MariaDB 서버를 로컬 시스템에 설치
     - (참고 : DBeaver를 사용해 MariaDB 연결하면 유지보수 용이)
@@ -62,10 +64,11 @@ SNSNE/
 
 4. 네이버 API의 클라이언트 ID와 시크릿 키와 DB 관련 설정을 `src/.env`에 입력합니다.
 
-5. Ollma에서 gemma2 모델 다운 및 사용 잘 되는지 확인 
-    명령어 : ollama run gemma2
-
-6. 터미널에서 `src/main.py`를 실행하여 전체 파이프라인을 수행합니다.
+5. Ollma에서 gemma2 모델 다운 및 사용 잘 되는지 확인
+```
+   ollama run gemma2
+```
+7. 터미널에서 `src/main.py`를 실행하여 전체 파이프라인을 수행합니다.
 
 
 

@@ -38,7 +38,7 @@ SNSNE/
 │   ├── streamlit_stream...  # etc : vLLM 참고 코드 (사용 안함)
 │   └── summarize.py         # 뉴스 요약 처리 스크립트
 ├── .gitignore               # Git 무시 파일 목록
-├── 최후의수단.txt           # requirements.txt로 가상환경을 만들어도 안될 경우, 라이브러리 직접 설치
+├── 최후의수단.txt           # requirements.txt로 패키지 설치가 안되는 경우, 라이브러리 직접 설치
 ├── docker-compose.yml       # DB 관련 Docker Compose 설정 파일 (MariaDB 이미지)
 ├── requirements.txt         # 프로젝트 실행에 필요한 Python 라이브러리 목록이 저장된 파일 (pip freeze)
 └── news_project.log         # 프로젝트 로그 파일 (gitignore 파일 - main 실행 시, 자동 생성됨)

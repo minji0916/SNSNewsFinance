@@ -43,18 +43,18 @@ SNSNE/
 0. 반드시 `src/.env` 파일을 받거나 만들어서 시작
 
 1. python=3.10.11 가상환경 생성 후, requirements.txt 파일을 이용해 패키지 설치
-- requirements.txt로 패키지 설치가 안될 경우, `최후의수단.txt`로 라이브러리 직접 설치
-```
-# 가상환경 생성 및 가상환경 들어가기
-conda create --name myenv python=3.10.11
-conda activate myenv
+    - requirements.txt로 패키지 설치가 안될 경우, `최후의수단.txt`로 라이브러리 직접 설치
+    ```
+    # 가상환경 생성 및 가상환경 들어가기
+    conda create --name myenv python=3.10.11
+    conda activate myenv
 
-# 패키지 의존성 파일 설치
-pip install -r requirements.txt
+    # 패키지 의존성 파일 설치
+    pip install -r requirements.txt
 
-# 설치 확인
-pip list
-```
+    # 설치 확인
+    pip list
+    ```
 
 2. Docker를 사용하는 경우, docker-compose.yml 파일을 사용해 MariaDB 사용
     - Docker Desktop 실행
@@ -71,10 +71,20 @@ pip list
 
 4. 네이버 API의 클라이언트 ID와 시크릿 키와 DB 관련 설정을 `src/.env`에 입력합니다.
 
-5. Ollma에서 gemma2 모델 다운 및 사용 잘 되는지 확인
-```
-   ollama run gemma2
-```
+5. Ollma설치 (참고 사이트 : https://wikidocs.net/238530)
+    - 웹사이트(https://ollama.com/)에 접속
+    - 다운로드(https://ollama.com/download) 페이지에서 운영체제(Linux, Mac OS, Windows)에 맞는 설치파일을 다운
+    - 설치파일을 실행하여 설치를 완료
+    - 설치가 잘 되었는지 확인하기 위해서, 터미널 또는 프롬프트에서 아래와 같이 입력 (기본 사용법 안내하는 문구 표시되면 설치 완료)
+     ```
+       ollama
+    ```
+
+6. gemma2 모델 다운 및 사용 잘 되는지 확인 (명령어 입력 시, 9b 모델 설치됨)
+    ```
+    ollama run gemma2
+    ```
+
 7. 터미널에서 `src/main.py`를 실행하여 전체 파이프라인을 수행합니다.
 - 주의 : 결과값으로 저장되는 DB의 News 테이블 summary 컬럼의 값은 json이기 때문에 DB 내부에서는 인코딩에러가 난 것처럼 보일 수 있습니다. 이는 에러가 아니니 안심!!
 

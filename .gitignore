@@ -29,4 +29,4 @@ desktop.ini
 *.tmp
 
 # 데이터베이스 DBeaver 사용으로 관리 파일
-database/*
+database/

@@ -4,8 +4,10 @@ import re
 import html
 import urllib.parse
 import logging
-from SNSNewsFinance.src.config  import CLIENT_ID, CLIENT_SECRET, DISPLAY_COUNT, START_INDEX, END_INDEX, SORT_ORDER, setup_logging
+from config  import CLIENT_ID, CLIENT_SECRET, DISPLAY_COUNT, START_INDEX, END_INDEX, SORT_ORDER, setup_logging
 from database import save_news_to_database
+
+
 
 encText = urllib.parse.quote("왜안될까")
 url = "https://openapi.naver.com/v1/search/blog?query=" + encText # JSON 결과

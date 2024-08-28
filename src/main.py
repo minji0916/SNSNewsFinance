@@ -4,7 +4,7 @@ from async_scrape_newspaper3k import main as scrape_main
 from summarize import summarize_news
 from database import create_tables
 
-# 테이블 없는 경우 생성
+# aidb 데이터베이스, 테이블 없는 경우 생성
 create_tables()
 
 async def main():

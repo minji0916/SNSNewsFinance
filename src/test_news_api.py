@@ -1,6 +1,8 @@
 # 네이버 검색 API 예제 - 블로그 검색
+# 네이버 개발자 포럼에서 제공하는 코드를 그대로 가져온 것이기 때문에 안될 수가 없는 코드
+
 import urllib.request
-from SNSNewsFinance.src.config  import CLIENT_ID, CLIENT_SECRET
+from config  import CLIENT_ID, CLIENT_SECRET
 
 client_id = CLIENT_ID
 client_secret = CLIENT_SECRET

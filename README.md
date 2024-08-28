@@ -38,6 +38,7 @@ SNSNE/
 │   ├── streamlit_stream...  # etc : vLLM 참고 코드 (사용 안함)
 │   └── summarize.py         # 뉴스 요약 처리 스크립트
 ├── .gitignore               # Git 무시 파일 목록
+├── 최후의수단.txt           # requirements.txt로 패키지 설치가 안되는 경우, 라이브러리 직접 설치
 ├── docker-compose.yml       # DB 관련 Docker Compose 설정 파일 (MariaDB 이미지)
 ├── requirements.txt         # 프로젝트 실행에 필요한 Python 라이브러리 목록이 저장된 파일 (pip freeze)
 └── news_project.log         # 프로젝트 로그 파일 (gitignore 파일 - main 실행 시, 자동 생성됨)
@@ -47,7 +48,19 @@ SNSNE/
 ![alt text](/img/image.png)
 
 ## 실행 방법
-1. `requirements.txt` 파일을 이용해 가상환경 생성
+1. python=3.10.11 가상환경 생성 후, requirements.txt 파일을 이용해 패키지 설치
+- requirements.txt로 패키지 설치가 안될 경우, `최후의수단.txt`로 라이브러리 직접 설치
+```
+# 가상환경 생성 및 가상환경 들어가기
+conda create --name myenv python=3.10.11
+conda activate myenv
+
+# 패키지 의존성 파일 설치
+pip install -r requirements.txt
+
+# 설치 확인
+pip list
+```
 
 2. Docker를 사용하는 경우, docker-compose.yml 파일을 사용해 MariaDB 사용
     - Docker Desktop 실행
@@ -69,7 +82,17 @@ SNSNE/
    ollama run gemma2
 ```
 7. 터미널에서 `src/main.py`를 실행하여 전체 파이프라인을 수행합니다.
+- 주의 : 결과값으로 저장되는 DB의 News 테이블 summary 컬럼의 값은 json이기 때문에 DB 내부에서는 인코딩에러가 난 것처럼 보일 수 있습니다. 이는 에러가 아니니 안심!!
 
-
+## 테스트 방법
+실행하는데 오래 걸릴 수 있으므로, `src/.env` 파일에서 해당 부분을 아래 설정으로 변경해줍니다.
+```
+# Naver news API 호출 시 설정
+SEARCH_QUERIES=["주식"]  # 검색할 키워드를 좁힘
+DISPLAY_COUNT=5         # 한 페이지에 5개의 뉴스만 반환
+START_INDEX=1           # 첫 번째 뉴스부터 시작
+END_INDEX=5             # 첫 5개의 뉴스만 반환
+SORT_ORDER='date'       # 최신 뉴스 기준으로 정렬
+```
 
  

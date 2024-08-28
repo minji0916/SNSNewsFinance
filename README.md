@@ -48,6 +48,8 @@ SNSNE/
 ![alt text](/img/image.png)
 
 ## 실행 방법
+0. 반드시 `src/.env` 파일을 받거나 만들어서 시작
+
 1. python=3.10.11 가상환경 생성 후, requirements.txt 파일을 이용해 패키지 설치
 - requirements.txt로 패키지 설치가 안될 경우, `최후의수단.txt`로 라이브러리 직접 설치
 ```
@@ -85,14 +87,14 @@ pip list
 - 주의 : 결과값으로 저장되는 DB의 News 테이블 summary 컬럼의 값은 json이기 때문에 DB 내부에서는 인코딩에러가 난 것처럼 보일 수 있습니다. 이는 에러가 아니니 안심!!
 
 ## 테스트 방법
-실행하는데 오래 걸릴 수 있으므로, `src/.env` 파일에서 해당 부분을 아래 설정으로 변경해줍니다.
+실행하는데 오래 걸릴 수 있으므로, `src/.env` 파일에서 해당 부분이 아래 설정으로 되어있는지 확인 후, 변경해줍니다.
 ```
 # Naver news API 호출 시 설정
 SEARCH_QUERIES=["주식"]  # 검색할 키워드를 좁힘
 DISPLAY_COUNT=5         # 한 페이지에 5개의 뉴스만 반환
 START_INDEX=1           # 첫 번째 뉴스부터 시작
 END_INDEX=5             # 첫 5개의 뉴스만 반환
-SORT_ORDER='date'       # 최신 뉴스 기준으로 정렬
+SORT_ORDER='smi'       # 최신 뉴스 기준으로 정렬
 ```
 
  

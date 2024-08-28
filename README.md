@@ -86,7 +86,7 @@ SEARCH_QUERIES=["주식"]  # 검색할 키워드를 좁힘
 DISPLAY_COUNT=5         # 한 페이지에 5개의 뉴스만 반환
 START_INDEX=1           # 첫 번째 뉴스부터 시작
 END_INDEX=5             # 첫 5개의 뉴스만 반환
-SORT_ORDER='smi'       # 최신 뉴스 기준으로 정렬
+SORT_ORDER='date'       # 최신 뉴스 기준으로 정렬
 ```
 
  

@@ -2,6 +2,7 @@ import mysql.connector
 from mysql.connector import Error
 from config import MYSQL_HOST, MYSQL_USER, MYSQL_PASSWORD, MYSQL_DATABASE
 import logging
+import json
 
 def create_connection():
     connection = None
@@ -37,7 +38,7 @@ def create_tables():
         content TEXT,
         summary TEXT,
         publication_date VARCHAR(255),
-        embedding TEXT
+        embedding INT
     )
     """
 
@@ -175,6 +176,36 @@ def update_news_summary(news_id, summary):
         logging.info(f"뉴스 요약 업데이트 완료: ID {news_id}")
     except Error as e:
         logging.error(f"데이터 업데이트 오류: {e}")
+    finally:
+        if connection.is_connected():
+            cursor.close()
+            connection.close()
+
+def get_decoded_summaries():
+    connection = create_connection()
+    if connection is None:
+        return []
+
+    cursor = connection.cursor(dictionary=True)
+    query = "SELECT news_id, summary FROM News WHERE summary IS NOT NULL AND summary != ''"
+
+    try:
+        cursor.execute(query)
+        results = cursor.fetchall()
+        decoded_summaries = []
+        for row in results:
+            try:
+                decoded_summary = json.loads(row['summary'])
+                decoded_summaries.append({
+                    'news_id': row['news_id'],
+                    'summary': decoded_summary
+                })
+            except json.JSONDecodeError as e:
+                logging.error(f"JSON 디코딩 오류 (news_id: {row['news_id']}): {e}")
+        return decoded_summaries
+    except Error as e:
+        logging.error(f"데이터 조회 오류: {e}")
+        return []
     finally:
         if connection.is_connected():
             cursor.close()
